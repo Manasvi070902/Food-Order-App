@@ -11,12 +11,31 @@ const cartReducer = (state, action) => {
 
     // updating state list as new items are added
     if (action.type === 'ADD') {
-        // as concat gives the brand new array , its better to use concat than push
-        const updatedItems = state.items.concat(action.item);
         const updatedTotalAmount = state.totalAmount + action.item.price * action.item.amount;
+
+        //check if it's already added to list
+        const existingCartItemIndex = state.items.findIndex(item =>  item.id === action.item.id )
+        const existingCartItem = state.items[existingCartItemIndex];
+
+        let updatedItems;
+
+        if (existingCartItem) {
+           const updatedItem = {
+                ...existingCartItem,
+                amount: existingCartItem.amount + action.item.amount
+            }
+
+            updatedItems = [...state.items]
+            updatedItems[existingCartItemIndex] = updatedItem;
+        } else{
+             // as concat gives the brand new array , its better to use concat than push
+             updatedItems = state.items.concat(action.item);
+        }
+       
+
         return {
             items: updatedItems,
-            totalAmount : updatedTotalAmount
+            totalAmount: updatedTotalAmount
         }
     }
 
