@@ -25,7 +25,7 @@ const Cart = (props) => {
     ))}
     </ul>);
 
-    const totalAmount = `${cartCtx.totalAmount.toFixed(2)}`;
+    const totalAmount = `$${Math.abs(cartCtx.totalAmount.toFixed(2))}`;
     const hasItems = cartCtx.items.length>0; //condition for order button
 
     return (
