@@ -4,7 +4,7 @@ import classes from "./Checkout.module.css"
 const isNotEmpty = value => value.trim() !== '';
 const isEmail = value => value.includes('@')
 const isNumber = value => value.length === 10 && value.match(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s/0-9]*$/g)
-const isPostal = value => value.length === 7;
+const isPostal = value => value.length === 6;
 const Checkout = (props) => {
 
     const {value: nameValue,isValid: nameIsValid,hasError: nameHasError, valueChangeHandler: nameChangeHandler,inputBlurHandler: nameBlurHandler,reset: resetName} = useInput(isNotEmpty);
@@ -29,11 +29,18 @@ const Checkout = (props) => {
     const codeClasses = `${classes.control} ${codeHasError ? classes.invalid : ''}`;
 
 
-    const submitHandler = (event) => {
-        event.prevent.default();
-        if (!formIsValid) {
-            return;
-          }
+    const submitHandler = async (event) => {
+        event.preventDefault();
+       
+          await props.onConfirm({
+              name : nameValue,
+              email : emailValue,
+              number : numberValue,
+              street : streetValue,
+              city : cityValue,
+              potalCode : codeValue
+
+          })
           resetName();
           resetEmail();
           resetStreet();
@@ -68,7 +75,7 @@ const Checkout = (props) => {
             <div className={codeClasses}>
                 <label htmlFor="code" >Postal Code</label>
                 <input id="code" type="text"value={codeValue} onChange={codeChangeHandler} onBlur={codeBlurHandler} />
-                {codeHasError && <p className="error-text">Please enter a valid postal code(7 digits only).</p>}
+                {codeHasError && <p className="error-text">Please enter a valid postal code(6 digits only).</p>}
             </div>
             <div className={cityClasses}>
                 <label htmlFor="city" >City</label>
@@ -84,8 +91,4 @@ const Checkout = (props) => {
         </form>
     )
 }
-
-       
-     
-         
 export default Checkout
